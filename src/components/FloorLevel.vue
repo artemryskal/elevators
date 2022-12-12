@@ -3,15 +3,15 @@
     <p class="level__number">
       {{ number }}
     </p>
-    <button class="btn" @click="stackStore.addToStack(number)">
+    <button class="btn" @click="addLevel(number)">
       <img
-        v-if="!stackStore.stack.includes(number)"
-        src="@/assets/icons/elevator-button.svg"
+        v-if="stackStore.stack.includes(number) || stackStore.currentLevel === number"
+        src="@/assets/icons/elevator-button-active.svg"
         alt="Вызвать лифт"
       >
       <img
         v-else
-        src="@/assets/icons/elevator-button-active.svg"
+        src="@/assets/icons/elevator-button.svg"
         alt="Вызвать лифт"
       >
     </button>
@@ -28,6 +28,12 @@ interface Props {
 const props = defineProps<Props>()
 
 const stackStore = useStackStore()
+
+const addLevel = (level: number) => {
+  if (stackStore.addToStack(level)) {
+    stackStore.goNextFloor()
+  }
+}
 </script>
 
 <style lang="scss" scoped>
