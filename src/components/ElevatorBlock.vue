@@ -5,6 +5,16 @@
     :style="{transform: `translateY(${stackStore.transform}px)`}"
     @transitionend="nextFloor"
   >
+    <div class="elevator__info">
+      <p>
+        {{ stackStore.currentLevel }}
+      </p>
+      <img
+        :src="require(`@/assets/icons/direction-${stackStore.direction}.svg`)"
+        alt="Направление"
+        class="elevator__direction"
+      >
+    </div>
   </div>
 </template>
 
@@ -20,6 +30,7 @@ const nextFloor = () => {
   elevator.value.classList.add('elevator--waiting')
 
   setTimeout(() => {
+    stackStore.preventLevel = stackStore.currentLevel
     stackStore.removeCurrentFloor()
     stackStore.goNextFloor()
     elevator.value.classList.remove('elevator--waiting')
@@ -41,6 +52,23 @@ onMounted(() => {
 
   &--waiting {
     animation: blink 0.6s infinite forwards alternate;
+  }
+
+  &__info {
+    display: flex;
+    position: absolute;
+    top: 0.5rem;
+    left: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    border-radius: 3px;
+    font-size: 1.25rem;
+    color: #fff;
+    transform: translateX(-50%);
+  }
+
+  &__direction {
+    margin-left: 0.5rem;
   }
 
   @keyframes blink {
