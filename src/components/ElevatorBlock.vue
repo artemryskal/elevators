@@ -10,12 +10,13 @@
 
 <script lang="ts" setup>
 import { useStackStore } from '@/stores/stack'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const stackStore = useStackStore()
 const elevator = ref<HTMLDivElement | null>(null)
 
 const nextFloor = () => {
+  if (!stackStore.stack.length) return false
   elevator.value.classList.add('elevator--waiting')
 
   setTimeout(() => {
@@ -24,6 +25,10 @@ const nextFloor = () => {
     elevator.value.classList.remove('elevator--waiting')
   }, 3000)
 }
+
+onMounted(() => {
+  nextFloor()
+})
 </script>
 
 <style lang="scss" scoped>

@@ -17,11 +17,12 @@ export const useStackStore = defineStore('stackStore', {
       return true
     },
     goNextFloor () {
-      if (!this.stack.length) return false
+      if (!this.stack.length) return this.stack.length
 
       // 100 - height of elevator
       this.currentLevel = this.stack[0]
       this.transform = -((this.currentLevel - 1) * 100)
+      return this.transform
     },
     removeCurrentFloor () {
       const index = this.stack.indexOf(this.currentLevel)
