@@ -20,14 +20,14 @@
 
 <script lang="ts" setup>
 import { defineProps } from 'vue'
-import { useStackStore } from '@/stores/stack'
+import { useElevatorStore } from '@/stores/elevator'
 
 interface Props {
   number: number
 }
 const props = defineProps<Props>()
 
-const stackStore = useStackStore()
+const stackStore = useElevatorStore()
 
 const addLevel = (level: number) => {
   if (stackStore.addToStack(level)) {

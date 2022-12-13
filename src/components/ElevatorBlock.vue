@@ -1,11 +1,14 @@
 <template>
   <div
     ref="elevator"
-    class="elevator"
-    :style="{transform: `translateY(${stackStore.transform}px)`}"
+    :class="['elevator', { 'elevator--waiting': isWaiting }]"
+    :style="{transform: `translateY(${stackStore.transform}px)`, 'transition-duration': `${stackStore.transitionDuration}s`}"
     @transitionend="nextFloor"
   >
-    <div class="elevator__info">
+    <div
+      v-if="stackStore.direction !== 'stop'"
+      class="elevator__info"
+    >
       <p>
         {{ stackStore.currentLevel }}
       </p>
@@ -19,21 +22,21 @@
 </template>
 
 <script lang="ts" setup>
-import { useStackStore } from '@/stores/stack'
+import { useElevatorStore } from '@/stores/elevator'
 import { onMounted, ref } from 'vue'
 
-const stackStore = useStackStore()
-const elevator = ref<HTMLDivElement | null>(null)
+const stackStore = useElevatorStore()
+const isWaiting = ref(false)
 
 const nextFloor = () => {
   if (!stackStore.stack.length) return false
-  elevator.value.classList.add('elevator--waiting')
+  isWaiting.value = true
 
   setTimeout(() => {
     stackStore.preventLevel = stackStore.currentLevel
     stackStore.removeCurrentFloor()
     stackStore.goNextFloor()
-    elevator.value.classList.remove('elevator--waiting')
+    isWaiting.value = false
   }, 3000)
 }
 
@@ -48,7 +51,7 @@ onMounted(() => {
   width: 100%;
   height: 100px;
   background-color: tomato;
-  transition: transform 0.4s;
+  transition: transform 1s linear;
 
   &--waiting {
     animation: blink 0.6s infinite forwards alternate;
